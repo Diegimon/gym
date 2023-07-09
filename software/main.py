@@ -1,27 +1,28 @@
 from tkinter import *
 from components import op1
+
+
 def opcao1():
     limpar_interface()
     window.destroy()
     op1.function()
 
+
 def opcao2():
     limpar_interface()
     label_resultado.config(text="search member")
 
+
 def opcao3():
     limpar_interface()
     label_resultado.config(text="show all members")
-    
+
+
 def opcao4():
-  limpar_interface()
-  label_resultado.config(text="delete member")
-  
-
-  
+    limpar_interface()
+    label_resultado.config(text="delete member")
 
 
-  
 def limpar_interface():
     # Remove os botões da interface
     button_opcao1.pack_forget()
@@ -30,6 +31,7 @@ def limpar_interface():
     button_opcao4.pack_forget()
     # Remove o texto anterior da interface
     label_resultado.config(text="")
+
 
 # Abrindo janela
 window = Tk()

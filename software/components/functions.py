@@ -7,54 +7,49 @@ import os
 # Verificar e instalar bibliotecas ausentes
 
 
-
 def criar_planilha():
     if os.path.exists("planilha.xlsx"):
         print("Planilha already exists")
         return
 
-
-    dados = {'name': [],    
+    dados = {'name': [],
              'id': [],
              'age': [],
              'contacts': []}
-    dados_history = {"id":[],
+    dados_history = {"id": [],
                      'name': [],
                      'duration': [],
                      'cost': []}
     df_main = pd.DataFrame(dados)
 
-
-    df_history = pd.DataFrame(dados_history)  
+    df_history = pd.DataFrame(dados_history)
     with pd.ExcelWriter("planilha.xlsx") as writer:
         df_main.to_excel(writer, sheet_name='members', index=False)
         df_history.to_excel(writer, sheet_name='member_ship', index=False)
 
     print("Planilhas created successfully.")
 
-def create_account(name,age,number,duration,cost):
+
+def create_account(name, age, number, duration, cost):
     df_main = pd.read_excel("planilha.xlsx", sheet_name='members')
-    df_history = pd.read_excel("planilha.xlsx", sheet_name='member_ship')    
+    df_history = pd.read_excel("planilha.xlsx", sheet_name='member_ship')
     balance = 1
     account = gerar_sequencia()
     nova_conta_main = pd.DataFrame({'name': [name],
                                     'id': [account],
                                     'age': [age],
-                                    'contacts':[number]})
-    
-    
+                                    'contacts': [number]})
+
     nova_conta_history = pd.DataFrame({'id': [account],
-                                    'name':[name],
-                                    'duration': [duration],
+                                       'name': [name],
+                                       'duration': [duration],
                                       'cost': [cost]})
 
     # Adiciona a nova conta ao DataFrame 'main'
     df_main = pd.concat(
         [df_main, nova_conta_main], ignore_index=False)
-    df_history = pd.concat([df_history, nova_conta_history], ignore_index=False)
-
-
-    
+    df_history = pd.concat(
+        [df_history, nova_conta_history], ignore_index=False)
 
     # Salva os DataFrames atualizados no arquivo Excel
     with pd.ExcelWriter("planilha.xlsx") as writer:
@@ -64,7 +59,7 @@ def create_account(name,age,number,duration,cost):
             writer, sheet_name='membership', index=False)
 
     print("Account created successfully")
-    
+
 
 def gerar_sequencia():
     # Gera uma sequência aleatória de duas letras
@@ -109,8 +104,6 @@ def validate_login(name, password):
 
     return valida, account_name, account_number, balance
 
-
-
     planilha = load_workbook("planilha.xlsx")
     main = planilha["main"]
     number = f"{account_number}"
@@ -143,17 +136,12 @@ def validate_login(name, password):
             aba_history[f'B{linha}'].value = new_history
             planilha.save("planilha.xlsx")
 
-
-
-
     planilha = load_workbook("planilha.xlsx")
     history = planilha['history']
     for number in history['A']:
         if account_number == number.value:
             linha = number.row
             print(yellow, history[f"B{linha}"].value)
-
-
 
     planilha = load_workbook("planilha.xlsx")
     main = planilha["main"]
@@ -215,8 +203,6 @@ def delete_account(account_number):
             aba_history[f'B{linha}'].value = new_history
             planilha.save("planilha.xlsx")
 
-
-
     print("=" * 20)
     valid = ["1", "2", "3", "4", "5", "6", "", " "]
     m = input(
@@ -228,8 +214,6 @@ def delete_account(account_number):
     return m
 
 # Função principal
-
-
 
     criar_planilha()
     while True:
@@ -320,8 +304,3 @@ code: github.com/diegimon""")
                 f"Program finished thanks for the preference!")
             finaly = input("[press any button to end]\n")
             break
-
-
-criar_planilha()
-create_account("diego",19,62996528343,3,120)
-

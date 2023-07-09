@@ -1,19 +1,34 @@
 from tkinter import *
+import re
+import functions as ft
 
 
-       
-def function ():  
-    
-    
+def function():
+    def validar_numeros(entrada):
+        if re.match(r'^[0-9]*$', entrada):
+            return True
+        else:
+            return False
+
+    def validar_sem_numeros(entrada):
+        if re.search(r'\d', entrada):
+            return False
+        return True
+
     def salvar_dados():
         nome = entry_nome.get()
         sobrenome = entry_sobrenome.get()
         numero = entry_numero.get()
         endereco = entry_endereco.get()
         data_nascimento = entry_data_nascimento.get()
-        
+        duração = entry_duration.get()
+        mensalidade = entry_cost.get()
 
-        if len(nome) < 2:
+        if nome == "" or sobrenome == '' or numero == "" or endereco == "" or data_nascimento == "" or duração == '' or mensalidade == "":
+            label_erro_nome.config(
+                text="Ainda há campos não preenchidos", fg="red")
+
+        elif len(nome) < 2:
             label_erro_nome.config(text="Nome inválido", fg="red")
         elif len(sobrenome) < 2:
             label_erro_nome.config(text="Sobrenome inválido", fg="red")
@@ -22,27 +37,43 @@ def function ():
             label_erro_nome.config(text="Numero inválido", fg="red")
         elif len(endereco) < 3:
             label_erro_nome.config(text="Endereço inválido", fg="red")
-        elif len(data_nascimento) < 8:
-            label_erro_nome.config(text="Data de nascimento invalida", fg="red")
+        elif len(data_nascimento) != 4:
+            label_erro_nome.config(
+                text="Ano de nascimento invalido", fg="red")
+
+        # elif duração < 0 or duração > 48:
+        #     label_erro_nome.config(text="Duração invalida", fg="red")
+        # elif mensalidade < 0:
+        #     label_erro_nome.config(text="Mensalidade inválida", fg="red")
         else:
-            print("Deu certo")
+            # -----------------------------------------------------tratamentp de tados
+            # name, age, number, duration,
+            print(duração, type(duração))
+            print(mensalidade, type(mensalidade))
+            name = nome + " " + sobrenome
+            age = (2023 - int(data_nascimento))
+            # ft.create_account(name, age, numero, duração, mensalidade)
+            print("Salvando dados do usuário...")
             label_erro_nome.config(text="Registrado", fg="green")
-        
+
     window = Tk()
-    
+
     window.title("Formulário")
 
     # Maximizar a janela
     window.state('zoomed')
 
     # Área do formulário
+    validar_numeros_cmd = window.register(validar_numeros)
+    validar_sem_numeros_cmd = window.register(validar_sem_numeros)
     frame_formulario = Frame(window, padx=20, pady=20)
     frame_formulario.pack()
 
     # Campo de Nome
     label_nome = Label(frame_formulario, text="Nome:")
     label_nome.grid(row=0, column=0)
-    entry_nome = Entry(frame_formulario)
+    entry_nome = Entry(frame_formulario, validate="key",
+                       validatecommand=(validar_sem_numeros_cmd, '%P'))
     entry_nome.grid(row=0, column=1)
 
     # Campo de Sobrenome
@@ -52,9 +83,11 @@ def function ():
     entry_sobrenome.grid(row=1, column=1)
 
     # Campo de Número
+
     label_numero = Label(frame_formulario, text="Número:")
     label_numero.grid(row=2, column=0)
-    entry_numero = Entry(frame_formulario)
+    entry_numero = Entry(frame_formulario, validate="key",
+                         validatecommand=(validar_numeros_cmd, '%P'))
     entry_numero.grid(row=2, column=1)
 
     # Campo de Endereço
@@ -64,17 +97,36 @@ def function ():
     entry_endereco.grid(row=3, column=1)
 
     # Campo de Data de Nascimento
-    label_data_nascimento = Label(frame_formulario, text="Data de Nascimento:")
+    label_data_nascimento = Label(frame_formulario, text="Ano de Nascimento:")
     label_data_nascimento.grid(row=4, column=0)
-    entry_data_nascimento = Entry(frame_formulario)
+    entry_data_nascimento = Entry(frame_formulario, validate="key",
+                                  validatecommand=(validar_numeros_cmd, '%P'))
     entry_data_nascimento.grid(row=4, column=1)
 
+    # Campo de Data de duração
+    label_duration = Label(frame_formulario, text="Duração:")
+    label_duration.grid(row=5, column=0)
+    entry_duration = Entry(frame_formulario, validate="key",
+                           validatecommand=(validar_numeros_cmd, '%P'))
+    entry_duration.grid(row=5, column=1)
+
+    # Campo de Data de mensalidade
+    label_cost = Label(frame_formulario, text="mensalidade:")
+    label_cost.grid(row=6, column=0)
+    entry_cost = Entry(frame_formulario, validate="key",
+                       validatecommand=(validar_numeros_cmd, '%P'))
+    entry_cost.grid(row=6, column=1)
+
     # Botão Salvar
-    button_salvar = Button(frame_formulario, text="Salvar", command=salvar_dados)
-    button_salvar.grid(row=5, columnspan=2)
+    button_salvar = Button(
+        frame_formulario, text="Salvar", command=salvar_dados)
+    button_salvar.grid(row=7, columnspan=2)
 
     # Label de Erro para o Nome
     label_erro_nome = Label(frame_formulario, text="", fg="red")
-    label_erro_nome.grid(row=6, columnspan=2)
+    label_erro_nome.grid(row=8, columnspan=2)
 
     window.mainloop()
+
+
+function()
