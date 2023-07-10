@@ -30,10 +30,23 @@ def criar_planilha():
     print("Planilhas created successfully.")
 
 
+def gerar_sequencia():
+    # Gera uma sequência aleatória de duas letras
+    letras = random.choices(string.ascii_uppercase, k=2)
+
+    # Gera um número de 6 dígitos
+    numero_6_digitos = random.randint(100000, 999999)
+
+    # Gera um número aleatório de 1 a 9
+    numero_1_a_9 = random.randint(1, 9)
+
+    # Retorna a sequência gerada
+    return ''.join(letras) + str(numero_6_digitos) + "RASTR0" + str(numero_1_a_9)
+
+
 def create_account(name, age, number, duration, cost):
     df_main = pd.read_excel("planilha.xlsx", sheet_name='members')
-    df_history = pd.read_excel("planilha.xlsx", sheet_name='member_ship')
-    balance = 1
+    df_history = pd.read_excel("planilha.xlsx", sheet_name='membership')
     account = gerar_sequencia()
     nova_conta_main = pd.DataFrame({'name': [name],
                                     'id': [account],
@@ -61,122 +74,34 @@ def create_account(name, age, number, duration, cost):
     print("Account created successfully")
 
 
-def gerar_sequencia():
-    # Gera uma sequência aleatória de duas letras
-    letras = random.choices(string.ascii_uppercase, k=2)
-
-    # Gera um número de 6 dígitos
-    numero_6_digitos = random.randint(100000, 999999)
-
-    # Gera um número aleatório de 1 a 9
-    numero_1_a_9 = random.randint(1, 9)
-
-    # Retorna a sequência gerada
-    return ''.join(letras) + str(numero_6_digitos) + "RASTR0" + str(numero_1_a_9)
-
-
-def validate_login(name, password):
+def buscar_membro(name, number):
+    number = str(number)
     planilha = load_workbook("planilha.xlsx")
-    planilha_ativa = planilha['main']
-    user = False
+    planilha_main = planilha['members']
+    planilha_membership = planilha['membership']
     valida = False
-    account_name = None
-    account_number = None
-    balance = None
+    member_ship = []
 
-    for linha in planilha_ativa.iter_rows(min_row=2, values_only=True):
-        if name == linha[0]:
-            user = True
-            print(f"Valid user")
-            if password == linha[2]:
-                print(f"Valid password")
-                valida = True
-                account_name = linha[0]
-                account_number = linha[3]
-                balance = linha[4]
-                break
+    for linha in planilha_main.iter_rows(values_only=True):
+        if name == linha[0] or number == linha[3]:
+            print("Usuário válido")
+            valida = True
+            account_name = linha[0]
+            account_number = linha[3]
+            member_ship.extend(linha)
+            age = linha[2]
+            Id = linha[1]
+            for linha_membership in planilha_membership.iter_rows(values_only=True):
+                if Id == linha_membership[0]:
+                    member_ship.append(
+                        (linha_membership[2], linha_membership[3]))
+                    break
 
-    if not user:
-        print("Invalid username")
-
-    elif not valida:
-        print("Invalid password")
-
-    return valida, account_name, account_number, balance
-
-    planilha = load_workbook("planilha.xlsx")
-    main = planilha["main"]
-    number = f"{account_number}"
-    encontrado = False
-
-    for celula in main["D"]:
-        if number == celula.value:
-            encontrado = True
-            linha = celula.row
-            balance = main[f'E{linha}'].value
-            balance += deposit
-            main[f"E{linha}"] = balance
-            print(f"New Balance: {balance}")
-            print("Deposit successfully")
-            reg = f"Deposit {deposit}$ New balance: {balance}"
-            planilha.save("planilha.xlsx")
-
-            break
-
-    if not encontrado:
-        print("Não encontrado")
-    planilha = load_workbook("planilha.xlsx")
-    aba_history = planilha['history']
-    coluna_a = aba_history['A']
-
-    for celula in coluna_a:
-        if celula.value == account_number:
-            linha = celula.row
-            new_history = aba_history[f'B{linha}'].value + "/" + reg
-            aba_history[f'B{linha}'].value = new_history
-            planilha.save("planilha.xlsx")
-
-    planilha = load_workbook("planilha.xlsx")
-    history = planilha['history']
-    for number in history['A']:
-        if account_number == number.value:
-            linha = number.row
-            print(yellow, history[f"B{linha}"].value)
-
-    planilha = load_workbook("planilha.xlsx")
-    main = planilha["main"]
-    number = f"{account_number}"
-    encontrado = False
-
-    for celula in main["D"]:
-        if number == celula.value:
-            encontrado = True
-            linha = celula.row
-            balance = main[f'E{linha}'].value
-            if withdraw > balance:
-                print("You don't have enough!")
-            balance -= withdraw
-            main[f"E{linha}"] = balance
-            print(f"New Balance: {balance}")
-            print("withdrawal successfully")
-
-            # Atualizando historico
-
-            reg = f" {withdraw}$ withdrawn, New balance: {balance}"
-            break
-
-    if not encontrado:
-        print(f"Não encontrado")
-    planilha.save("planilha.xlsx")
-    aba_history = planilha['history']
-    coluna_a = aba_history['A']
-
-    for celula in coluna_a:
-        if celula.value == account_number:
-            linha = celula.row
-            new_history = aba_history[f'B{linha}'].value + "/" + reg
-            aba_history[f'B{linha}'].value = new_history
-            planilha.save("planilha.xlsx")
+    if valida:
+        return Id, account_name, age, member_ship
+    else:
+        print("Usuário ou número inválido")
+        return False
 
 
 def delete_account(account_number):

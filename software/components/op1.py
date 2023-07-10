@@ -1,9 +1,80 @@
 from tkinter import *
 import re
-import functions as ft
+import string
+import random
+from openpyxl import Workbook, load_workbook
+import pandas as pd
+import os
 
 
-def function():
+def criar_planilha():
+    if os.path.exists("planilha.xlsx"):
+        print("Planilha already exists")
+        return
+
+    dados = {'name': [],
+             'id': [],
+             'age': [],
+             'contacts': []}
+    dados_history = {"id": [],
+                     'name': [],
+                     'duration': [],
+                     'cost': []}
+    df_main = pd.DataFrame(dados)
+
+    df_history = pd.DataFrame(dados_history)
+    with pd.ExcelWriter("planilha.xlsx") as writer:
+        df_main.to_excel(writer, sheet_name='members', index=False)
+        df_history.to_excel(writer, sheet_name='member_ship', index=False)
+
+    print("Planilhas created successfully.")
+
+
+def gerar_sequencia():
+    # Gera uma sequência aleatória de duas letras
+    letras = random.choices(string.ascii_uppercase, k=2)
+
+    # Gera um número de 6 dígitos
+    numero_6_digitos = random.randint(100000, 999999)
+
+    # Gera um número aleatório de 1 a 9
+    numero_1_a_9 = random.randint(1, 9)
+
+    # Retorna a sequência gerada
+    return ''.join(letras) + str(numero_6_digitos) + "RASTR0" + str(numero_1_a_9)
+
+
+def create_account(name, age, number, duration, cost):
+    df_main = pd.read_excel("planilha.xlsx", sheet_name='members')
+    df_history = pd.read_excel("planilha.xlsx", sheet_name='member_ship')
+    account = gerar_sequencia()
+    nova_conta_main = pd.DataFrame({'name': [name],
+                                    'id': [account],
+                                    'age': [age],
+                                    'contacts': [number]})
+
+    nova_conta_history = pd.DataFrame({'id': [account],
+                                       'name': [name],
+                                       'duration': [duration],
+                                      'cost': [cost]})
+
+    # Adiciona a nova conta ao DataFrame 'main'
+    df_main = pd.concat(
+        [df_main, nova_conta_main], ignore_index=False)
+    df_history = pd.concat(
+        [df_history, nova_conta_history], ignore_index=False)
+
+    # Salva os DataFrames atualizados no arquivo Excel
+    with pd.ExcelWriter("planilha.xlsx") as writer:
+        df_main.to_excel(
+            writer, sheet_name='members', index=False)
+        df_history.to_excel(
+            writer, sheet_name='member_ship', index=False)
+
+    print("Account created successfully")
+
+
+def function1():
     def validar_numeros(entrada):
         if re.match(r'^[0-9]*$', entrada):
             return True
@@ -23,7 +94,8 @@ def function():
         data_nascimento = entry_data_nascimento.get()
         duração = entry_duration.get()
         mensalidade = entry_cost.get()
-
+        duração = int(duração)
+        mensalidade = int(mensalidade)
         if nome == "" or sobrenome == '' or numero == "" or endereco == "" or data_nascimento == "" or duração == '' or mensalidade == "":
             label_erro_nome.config(
                 text="Ainda há campos não preenchidos", fg="red")
@@ -41,18 +113,16 @@ def function():
             label_erro_nome.config(
                 text="Ano de nascimento invalido", fg="red")
 
-        # elif duração < 0 or duração > 48:
-        #     label_erro_nome.config(text="Duração invalida", fg="red")
-        # elif mensalidade < 0:
-        #     label_erro_nome.config(text="Mensalidade inválida", fg="red")
+        elif duração < 0 or duração > 48:
+            label_erro_nome.config(text="Duração invalida", fg="red")
+        elif mensalidade < 0:
+            label_erro_nome.config(text="Mensalidade inválida", fg="red")
         else:
             # -----------------------------------------------------tratamentp de tados
             # name, age, number, duration,
-            print(duração, type(duração))
-            print(mensalidade, type(mensalidade))
             name = nome + " " + sobrenome
             age = (2023 - int(data_nascimento))
-            # ft.create_account(name, age, numero, duração, mensalidade)
+            create_account(name, age, numero, duração, mensalidade)
             print("Salvando dados do usuário...")
             label_erro_nome.config(text="Registrado", fg="green")
 
@@ -127,6 +197,3 @@ def function():
     label_erro_nome.grid(row=8, columnspan=2)
 
     window.mainloop()
-
-
-function()
