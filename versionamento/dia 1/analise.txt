@@ -1,0 +1,6 @@
+portuguese:
+minha ideia inicial era criar um arquivo main com as interfaces principais e em seguida criar as funções para elas que seriam chamadas dentro de outras interfaces, precebi que alguns pontos neste exercicio poderiam ser simplificados como o fato de poder alterar deletar o contrato e a função na mesma interface ajudaria muito teoricamente a criação e importação.
+----------------------------------------------------------------------------------------------------------------
+spanish: 
+mi idea inicial era crear un archivo principal con las interfaces principales y luego crear funciones para ellas que serían llamadas dentro de otras interfaces,
+Me di cuenta que algunos puntos de este ejercicio se podrían simplificar ya que el hecho de poder modificar, borrar el contrato y la función en la misma interfaz ayudaría mucho en teoría a la creación e importación.

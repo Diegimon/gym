@@ -1,0 +1,4 @@
+Dessa fez fiz a maior parte do programa em portugues minha lingua nativa acredito que seja até mais facil para que compreendam, será preciso que instale varias bibliotecas a pasta ambiente e meu ambiente virtual não tenho certeza se ele funcionara 100% quando ativo então ativem ele antes de rodar o programa e caso as bibliotecas não sejam instaladas será preciso que instalem manualmente segue o comando abaixo para as que irão precisar 
+TKINTER, OPENPYXL, PANDAS, OS 
+
+Acredito que com essas vocês ja conseeguirão rodas o código sem problema obrigado qualquer duvida estou sempre a disposição no whatsapp 62996528343 e entrando regularmente no email dscontac@hotmail.com

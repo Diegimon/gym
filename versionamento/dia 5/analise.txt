@@ -1,0 +1,5 @@
+portuguese:
+Me toquei de que não conseguiria fazer da menira que desejava então tive que trazer as funções para os mesmos arquivos que as interfaces e organiza-los dentro para não misturar o bastante por isso o op2 teve a funtion2() como primaria e segunda_parte() como secundaria para que eu não perdesse mais tempo procurando coisas dentro do código.
+----------------------------------------------------------------------------------------------------------------------------------------
+spanish:
+Me di cuenta de que no podía hacerlo de la manera que quería, así que tuve que llevar las funciones a los mismos archivos que las interfaces y organizarlas dentro para no mezclarlas lo suficiente, de modo que op2 tuviera funtion2() como principal y second_part() como secundario para no perder más tiempo buscando cosas dentro del código
